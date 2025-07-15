@@ -16,7 +16,7 @@ clientRootV2 = APIRouter(
 )
 
 
-clientRoot = FastAPI()
+clientRoot = APIRouter()
 
 clientRoot.include_router(clientRootV1, prefix='/api/client')
 clientRoot.include_router(clientRootV2, prefix='/api/client')

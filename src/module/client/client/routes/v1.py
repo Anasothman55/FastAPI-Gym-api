@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-clientRouter= APIRouter(
+clientRouter = APIRouter(
   tags=['Client']
 )
 

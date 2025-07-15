@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import computed_field, model_validator
 from typing_extensions import Self
+from typing import List
 from dotenv import load_dotenv
 
 load_dotenv()

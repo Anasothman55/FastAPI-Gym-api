@@ -1,12 +1,17 @@
-from fastapi import APIRouter
+from ..dependencie import erm, EmailRegisterParams
 
+from typing import Annotated,Any
+
+from fastapi import APIRouter, Depends
+
+from ..schema import ClientAuthRegisterResponseEmail
 
 email = APIRouter(
   prefix='/email'
 )
 
-@email.post('/register')
-async def email_register(): return 'email-register'
+@email.post('/register', response_model=ClientAuthRegisterResponseEmail)
+async def email_register(p: Annotated[EmailRegisterParams, Depends(erm)]): return p.client_model
 
 @email.post('/login')
 async def email_login(): return "email login"
