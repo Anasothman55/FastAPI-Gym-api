@@ -8,7 +8,7 @@ class LoginProvider(StrEnum):
   APPLE = 'apple'
 
 
-class UserStatusEnum(StrEnum):
+class StatusEnum(StrEnum):
   ACTIVE = 'active'
   INACTIVE = 'inactive'
   SUSPEND = 'suspend'

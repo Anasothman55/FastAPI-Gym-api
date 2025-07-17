@@ -1,23 +1,28 @@
+from watchfiles import awatch
+from itsdangerous import URLSafeSerializer
 from ..dependencie import erm, EmailRegisterParams
 
-from typing import Annotated,Any
+from typing import Annotated,Any, List
 
-from fastapi import APIRouter, Depends
-
+from fastapi import APIRouter, Depends, Query, status
 from ..schema import ClientAuthRegisterResponseEmail
+from ..service import email_register_service, verify_email_service
+from fastapi.responses import JSONResponse, ORJSONResponse
+
 
 email = APIRouter(
   prefix='/email'
 )
 
-@email.post('/register', response_model=ClientAuthRegisterResponseEmail)
-async def email_register(p: Annotated[EmailRegisterParams, Depends(erm)]): return p.client_model
+
+@email.post('/register', response_model=ClientAuthRegisterResponseEmail, status_code=status.HTTP_201_CREATED)
+async def email_register(p: Annotated[EmailRegisterParams, Depends(erm)]): return await email_register_service(p.db, p.body)
+
+@email.get('/verify', status_code=status.HTTP_200_OK)
+async def email_verify(token: Annotated[str, Query()]): return await verify_email_service(token)
 
 @email.post('/login')
 async def email_login(): return "email login"
-
-@email.post('/verify')
-async def email_verify(): return 'email verify'
 
 @email.post('/forgot-password')
 async def email_forgot_password(): return 'email forgot password'

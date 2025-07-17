@@ -9,5 +9,6 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     except  Exception as e:
       await session.rollback()
       print(e.__dict__)
+      raise
     finally:
       await session.close()

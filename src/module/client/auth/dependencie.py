@@ -1,6 +1,6 @@
 from typing import Annotated
 from sqlalchemy.ext.asyncio import  AsyncSession
-from fastapi import  Form
+from fastapi import  Form, Body
 from src.module.client.auth.schema import ClientAuthRegister
 from src.shared.dependencies.db import get_db
 from dataclasses import dataclass
@@ -9,15 +9,16 @@ from fastapi import Depends
 @dataclass
 class EmailRegisterParams:
   db: AsyncSession
-  client_model: ClientAuthRegister
+  body: ClientAuthRegister
 
 async def erm(
     db: Annotated[AsyncSession, Depends(get_db)],
-    client_model: Annotated[ClientAuthRegister, Form()]
+    body: Annotated[ClientAuthRegister, Form()]
 ) -> EmailRegisterParams:
+  """ Email Register Params Dependency """
   return EmailRegisterParams(
     db=db,
-    client_model=client_model
+    body=body
   )
 
 

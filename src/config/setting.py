@@ -3,6 +3,17 @@ from pydantic import computed_field, model_validator
 from typing_extensions import Self
 from typing import List
 from dotenv import load_dotenv
+import psutil
+import socket
+
+def get_host() -> str | None:
+  for iface, addrs in psutil.net_if_addrs().items():
+    if "wi" in iface.lower() or "wireless" in iface.lower():
+      for addr in addrs:
+        if addr.family == socket.AF_INET:
+          return addr.address
+  return None
+
 
 load_dotenv()
 
@@ -11,6 +22,7 @@ class Settings(BaseSettings):
   STACK_NAME: str
   SERVER_PORT: int
   SERVER_DOMAIN: str
+  WIFI_DOMAIN: str = get_host()
   BACKEND_CORS_ORIGINS: str
   POSTGRESQL_URI: str
   JWT_ACCESS_TOKEN: str
@@ -21,6 +33,7 @@ class Settings(BaseSettings):
 
   EMAIL_VERIFY_SECRET: str
   EMAIL_VERIFY_SALT: str
+  EMAIL_EXP_HOUR: int
 
   ADMIN_EMAIL: str
   ADMIN_PASSWORD: str
@@ -34,6 +47,9 @@ class Settings(BaseSettings):
   SMTP_PORT: int
 
   FRONTEND_HOST: str
+
+  REDIS_URI: str
+
 
   @model_validator(mode="after")
   def _set_default_emails_from(self) -> Self:

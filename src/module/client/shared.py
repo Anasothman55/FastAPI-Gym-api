@@ -2,8 +2,9 @@ from typing import Optional, Annotated
 from datetime import datetime
 from pydantic import BaseModel, EmailStr, Field, ConfigDict, BeforeValidator
 from src.shared.enums.constant import VerifyTokenType
-from src.shared.schema.emptyString import empty_string
 from src.shared.timestemp import get_timestamp
+from src.shared.schema.emptyString import empty_string
+
 
 StringNotEmpty = Annotated[str, BeforeValidator(empty_string)]
 
