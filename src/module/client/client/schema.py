@@ -1,7 +1,5 @@
 from typing import Annotated
-
 from pydantic import BaseModel, ConfigDict, BeforeValidator, Field
-
 from src.database.sql.model import UserModel, ClientModel, EmailRegisterModel
 from src.shared.schema.emptyString import empty_string
 
@@ -15,13 +13,6 @@ class ClientBase(BaseModel):
     extra='forbid',
     str_strip_whitespace= True,
   )
-
-
-
-
-
-
-
 
 
 

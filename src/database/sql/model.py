@@ -108,5 +108,3 @@ class VerificationTokenModel(TimestampMixin, Base):
   email_register_id: Mapped[Optional[int]] = mapped_column(ForeignKey('email_register.id', ondelete='SET NULL')) #? Remove the optional
   Email: Mapped[Optional["EmailRegisterModel"]] = relationship(back_populates='VerificationToken', lazy='selectin')
 
-
-

@@ -33,6 +33,17 @@ app.add_middleware(
 app.add_middleware(TimerMiddleware) # type: ignore
 app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)
 
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+  # Optional: log to a file or Sentry
+  return ORJSONResponse(
+    status_code=500,
+    content={
+      "msg": "Internal server error",
+      "detail": str(exc)
+    }
+  )
+
 
 app.include_router(clientRoot)
 

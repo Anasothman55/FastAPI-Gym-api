@@ -2,7 +2,7 @@
 from itsdangerous import URLSafeTimedSerializer
 from itsdangerous.exc import BadData
 from fastapi import HTTPException, Response, status
-
+from rich import print
 from src.config.setting import settings
 
 #? create url safe token with itsdangerous library
@@ -16,8 +16,9 @@ def create_url_safe_token(data: dict[str: str]):
 
 def decode_url_safe_token(token: str)-> dict:
   try:
-    return serializer.loads(token, max_age=settings.EMAIL_EXP_HOUR )
+    return serializer.loads(token, max_age=settings.EMAIL_EXP_HOUR * 3600 )
   except BadData as ex:
+    print(ex.__dict__)
     raise HTTPException(
       status_code= status.HTTP_401_UNAUTHORIZED,
       detail= str(ex.message)

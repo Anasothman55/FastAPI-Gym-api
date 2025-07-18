@@ -1,28 +1,34 @@
+
+from typing import Annotated
+
 from watchfiles import awatch
-from itsdangerous import URLSafeSerializer
-from ..dependencie import erm, EmailRegisterParams
 
-from typing import Annotated,Any, List
+from src.module.client.auth.dependencies import (
+  EmailRegisterParams,
+  EmailVerifyParams,
+  erm,
+  emp,
+  EmailLoginParams,
+  elp
+)
+from fastapi import APIRouter, Depends, status
 
-from fastapi import APIRouter, Depends, Query, status
-from ..schema import ClientAuthRegisterResponseEmail
-from ..service import email_register_service, verify_email_service
-from fastapi.responses import JSONResponse, ORJSONResponse
-
+from ..schema.response import EmailVerifyResponse, EmailRegisterResponse, EmailLoginResponse
+from ..service import email_register_service, verify_email_service, login_email_service
 
 email = APIRouter(
   prefix='/email'
 )
 
 
-@email.post('/register', response_model=ClientAuthRegisterResponseEmail, status_code=status.HTTP_201_CREATED)
+@email.post('/register', status_code=status.HTTP_201_CREATED, response_model=EmailRegisterResponse)
 async def email_register(p: Annotated[EmailRegisterParams, Depends(erm)]): return await email_register_service(p.db, p.body)
 
-@email.get('/verify', status_code=status.HTTP_200_OK)
-async def email_verify(token: Annotated[str, Query()]): return await verify_email_service(token)
+@email.get('/verify', status_code=status.HTTP_200_OK, response_model=EmailVerifyResponse)
+async def email_verify(p: Annotated[EmailVerifyParams, Depends(emp)]): return await verify_email_service(p.db,p.token)
 
-@email.post('/login')
-async def email_login(): return "email login"
+@email.post('/login', response_model=EmailLoginResponse)
+async def email_login(p: Annotated[EmailLoginParams, Depends(elp)]): return await login_email_service(p.db, p.body)
 
 @email.post('/forgot-password')
 async def email_forgot_password(): return 'email forgot password'
